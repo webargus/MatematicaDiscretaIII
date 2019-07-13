@@ -6,24 +6,24 @@
         Edson Kropniczki - (c) jul/2019 - all rights reserved
     License:
         just keep this header in your copy and feel free to mess up with this code as you wish;
-        project open source available at https://github.com/webargus/MatematicaDiscretaIII;
-        actually, accretions and improvements are more than welcome!
+        project open source publicly available at https://github.com/webargus/MatematicaDiscretaIII;
+        actually, accretions and improvements are more than welcome! :)
     Disclaimer:
-        use it on your own risk! No liabilities or warrants granted!
+        No liabilities or warrants whatsoever granted, as usual. Use it on your own risk!
 """
 
 from tkinter import *
 import Graph
-
+import EdgeDistanceDlg as edgedlg
 
 class GraphCanvas:
 
-    node_radius = 15
+    node_radius = 15                        # static integer for graphic vertex circle radius
 
     def __init__(self, frame):
 
-        self.graph = Graph.Graph()
-        self.prev_sel = None
+        self.graph = Graph.Graph()          # Graph obj to accumulate nodes created
+        self.sel = None                     # pointer to selected nodes for edging
 
         self.canvas = Canvas(frame)
         self.canvas.grid(row=0, column=0, sticky=NSEW)
@@ -31,32 +31,31 @@ class GraphCanvas:
         self.canvas.bind('<Button-1>', self.__handle_click)
 
     def __handle_click(self, event):
-        # create new node if user clicked on blank
+        # try to get node under mouse click
         node = self._in_node(event.x, event.y)
+        # create fresh node if user clicked on blank canvas
         if node is None:
             self._create_node(event.x, event.y)
             return
-        # select node otherwise
-        print(node)
-        if self.prev_sel is None:
-            self.prev_sel = node
-            print("1st node selected: %s" % node)
+        # select 1st node otherwise
+        if self.sel is None:
+            self.sel = node
             return
-        elif self.prev_sel == node:
+        elif self.sel == node:
             # clicked on same node, cancel selection
-            self.prev_sel = None
+            self.sel = None
             return
-        # draw edge
-        print("edge from %s to %s" % (self.prev_sel, node))
-        self._draw_edge(node)
-        self.prev_sel = None
+        # user clicked on 2nd node => selection complete => draw edge between them
+        self.sel = (self.sel, node)
+        # prompt user to input distance
+        edgedlg.EdgeDistanceDlg(self.canvas, self._draw_edge)
 
-    def _draw_edge(self, node):
-        print(self.prev_sel.edge_border(node))
-        print(node.edge_border(self.prev_sel))
-        self.canvas.create_line(self.prev_sel.edge_border(node),
-                                node.edge_border(self.prev_sel),
-                                width=3)
+    def _draw_edge(self):
+        n1, n2 = self.sel      # retrieve selected node pair
+        self.canvas.create_line(n1.edge_border(n2),
+                                n2.edge_border(n1),
+                                width=1)
+        self.sel = None        # unselect nodes
 
     def _create_node(self, x, y):
         node = CanvasNode(x, y)
@@ -98,7 +97,6 @@ class CanvasNode(Graph.Node):
         if other.y < self.y:
             yp = self.y - (yp - self.y)
         return xp, yp
-
 
 
 

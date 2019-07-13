@@ -8,6 +8,7 @@
 from tkinter import *
 from tkinter.ttk import *
 import GraphCanvas
+import tools
 
 
 class Gui(Frame):
@@ -27,6 +28,7 @@ class Gui(Frame):
 
         self.graph = GraphCanvas.GraphCanvas(self)
 
+        tools.center_window(self.master)
         self.mainloop()
 
 
