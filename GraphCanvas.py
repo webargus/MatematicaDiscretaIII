@@ -26,8 +26,11 @@ class GraphCanvas:
 
         self.graph = Graph.Graph()          # Graph obj to accumulate nodes created
         self.sel = None                     # pointer to selected nodes for edging
+        self.dijkstra = None                # pointer to selected nodes for Dijkstra
+        self.sel_tags = []
+        self.arrow = PhotoImage(file='arrow16.png')  # img to highlight node selection
 
-        self.canvas = Canvas(frame)
+        self.canvas = Canvas(frame, background="white")
         self.canvas.grid(row=0, column=0, sticky=NSEW)
 
         self.canvas.bind('<Button-1>', self.__handle_click)
@@ -38,16 +41,19 @@ class GraphCanvas:
         # create fresh node if user clicked on blank canvas
         if node is None:
             self._create_node(event.x, event.y)
+            self._remove_tags()                     # unselect node if any selected
             return
         # select 1st node otherwise
         if self.sel is None:
             self.sel = node
+            self._draw_tag(node)
             return
         elif self.sel == node:
             # clicked on same node, cancel selection
-            self.sel = None
+            self._remove_tags()
             return
         # user clicked on 2nd node => selection complete => draw edge between them
+        self._draw_tag(node)
         # prompt user to input distance
         EdgeDlg.EdgeDistanceDlg(self.canvas,
                                 "Aresta %d - %d" % (self.sel.node_id, node.node_id),
@@ -63,7 +69,7 @@ class GraphCanvas:
                                 font=GraphCanvas.font,
                                 fill="red",
                                 text=dist)
-        self.sel = None                                 # unselect nodes
+        self._remove_tags()                             # unselect node pair
 
     def _create_node(self, x, y):
         node = CanvasNode(x, y)
@@ -74,6 +80,17 @@ class GraphCanvas:
                                 y + GraphCanvas.node_radius,
                                 fill="yellow")
         self.canvas.create_text(x, y, text=node.node_id, font=GraphCanvas.font, fill="blue")
+
+    def _draw_tag(self, node):
+        self.sel_tags.append(self.canvas.create_image(node.x + GraphCanvas.node_radius,
+                                                      node.y - GraphCanvas.node_radius,
+                                                      image=self.arrow))
+
+    def _remove_tags(self):
+        self.sel = None
+        for tag in self.sel_tags:
+            self.canvas.delete(tag)
+        del self.sel_tags[:]
 
     def _in_node(self, x, y):
         for node in self.graph:
@@ -113,6 +130,5 @@ class CanvasNode(Graph.Node):
 
     def get_distance(self, other):
         return ((other.x - self.x)**2 + (other.y - self.y)**2)**.5
-
 
 

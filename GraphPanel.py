@@ -6,6 +6,7 @@
 """
 
 from tkinter import *
+from tkinter import messagebox
 import GraphCanvas
 
 
@@ -23,7 +24,7 @@ class GraphPanel:
 
         header = Frame(wrap)
         header.grid({"row": 0, "column": 0, "sticky": NSEW})
-        l1 = Label(header, {"text": "Cálculo do caminho mais curto pelo algoritmo de Dijkstra",
+        l1 = Label(header, {"text": "Cálculo do menor percurso pelo algoritmo de Dijkstra",
                             "font": ("Arial", 12),
                             "padx": 20,
                             "pady": 20})
@@ -31,6 +32,20 @@ class GraphPanel:
 
         form = Frame(wrap, {"pady": 8, "padx": 8})
         form.grid({"row": 1, "column": 0, "sticky": NSEW, "pady": 8, "padx": 8})
+
+        # result report labels
+        self.path = Label(form)
+        self.path.grid(row=0, column=0)
+        self.result = Label(form)
+        self.result.grid(row=1, column=0)
+
+        # infos btn
+        self.info_img = PhotoImage(file="info24.png")
+        Button(form,
+               image=self.info_img,
+               width=24,
+               height=24,
+               command=self._infos).grid(row=2, column=0)
 
         canvasF = Frame(wrap, {"relief": SUNKEN, "border": 1})
         canvasF.grid({"pady": 8, "padx": 8, "row": 2, "column": 0, "sticky": NSEW})
@@ -41,7 +56,11 @@ class GraphPanel:
     def _submit_form(self):
         pass
 
-
+    def _infos(self):
+        text = "Clique no painel em branco: cria novo vértice\n"
+        text += "Clique em dois vértices em sequência: cria aresta\n"
+        text += "Ctrl + clique em dois vértices em sequência: cálculo Dijkstra"
+        messagebox.showinfo("Infos", text)
 
 
 
