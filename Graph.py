@@ -24,6 +24,12 @@ class Node:
             self.edges.append(edge)
             other.add_edge(self, dist)
 
+    def is_edge(self, other):
+        for edge in self.edges:
+            if edge.n2 == other:
+                return True
+        return False
+
     def __str__(self):
         s = "vértice %d:\n\tarestas: " % self.node_id
         if len(self.edges) > 0:

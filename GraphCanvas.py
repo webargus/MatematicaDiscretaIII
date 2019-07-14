@@ -22,8 +22,9 @@ class GraphCanvas:
     node_radius = 15                        # static integer for graphic vertex circle radius
     font = ("Arial", 10, "bold")            # static font for graph texts
 
-    def __init__(self, frame):
+    def __init__(self, frame, callback):
 
+        self.callback = callback            # parent callback to work Dijkstra thing on graph
         self.graph = Graph.Graph()          # Graph obj to accumulate nodes created
         self.sel = None                     # pointer to selected nodes for edging
         self.dijkstra = None                # pointer to selected nodes for Dijkstra
@@ -33,9 +34,10 @@ class GraphCanvas:
         self.canvas = Canvas(frame, background="white")
         self.canvas.grid(row=0, column=0, sticky=NSEW)
 
-        self.canvas.bind('<Button-1>', self.__handle_click)
+        self.canvas.bind('<Button-1>', self._handle_click)
+        self.canvas.bind('<Control-1>', self._dijkstra)
 
-    def __handle_click(self, event):
+    def _handle_click(self, event, ctrl=False):
         # try to get node under mouse click
         node = self._in_node(event.x, event.y)
         # create fresh node if user clicked on blank canvas
@@ -52,16 +54,32 @@ class GraphCanvas:
             # clicked on same node, cancel selection
             self._remove_tags()
             return
-        # user clicked on 2nd node => selection complete => draw edge between them
-        self._draw_tag(node)
+        # user clicked on 2nd node => selection complete
+        self.sel = (self.sel, node)
+        if ctrl:
+            self.callback(self.sel, self.graph)             # do Dijkstra
+            self._remove_tags()
+        else:
+            self._draw_tag(node)
+            # edge drawing
+            self._edge()
+
+    def _dijkstra(self, event):
+        self._handle_click(event, True)
+
+    def _edge(self):
+        n1, n2 = self.sel
+        if n1.is_edge(n2):                      # abort if edge between nodes already exists
+            self._remove_tags()
+            return
         # prompt user to input distance
         EdgeDlg.EdgeDistanceDlg(self.canvas,
-                                "Aresta %d - %d" % (self.sel.node_id, node.node_id),
+                                "Aresta %d - %d" % (n1.node_id, n2.node_id),
                                 self._draw_edge)
-        self.sel = (self.sel, node)
 
     def _draw_edge(self, dist):
         n1, n2 = self.sel                               # retrieve selected node pair
+        n1.add_edge(n2, dist)                           # add edge between them
         self.canvas.create_line(n1.edge_border(n2),
                                 n2.edge_border(n1),
                                 width=1)

@@ -51,10 +51,13 @@ class GraphPanel:
         canvasF.grid({"pady": 8, "padx": 8, "row": 2, "column": 0, "sticky": NSEW})
         canvasF.grid_columnconfigure(0, weight=1)
         canvasF.grid_rowconfigure(0, weight=1)
-        self.canvas = GraphCanvas.GraphCanvas(canvasF)
+        self.canvas = GraphCanvas.GraphCanvas(canvasF, self._do_dijkstra)
 
-    def _submit_form(self):
-        pass
+    def _do_dijkstra(self, sel, graph):
+        for node in sel:
+            print(node)
+        for node in graph:
+            print(node)
 
     def _infos(self):
         text = "Clique no painel em branco: cria novo vértice\n"
