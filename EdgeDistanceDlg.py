@@ -1,24 +1,23 @@
 
 from tkinter import *
 from tkinter import messagebox
-import tools
+import Tools
 
 
 class EdgeDistanceDlg:
 
-    def __init__(self, parent, callback):
+    def __init__(self, parent, title, callback):
 
         self.top = Toplevel(parent, pady=10, padx=10)
+        Tools.Tools.center_window(self.top, 220, 70)
         self.top.resizable(0, 0)
         self.top.state("normal")
-        self.top.geometry('220x70')
-        self.top.title("Aresta")
+        self.top.title(title)
         self.top.iconbitmap('brasao32.ico')
         self.top.protocol("WM_DELETE_WINDOW", lambda: None)
-        self.parent = parent
-        self.parent.master.master.wm_attributes("-disabled", True)
+        Tools.Tools.master.wm_attributes("-disabled", True)
         self.top.after(500, lambda: self.top.focus_force())
-        self.top.transient(parent.master.master)
+        self.top.transient(Tools.Tools.master)
         self.callback = callback
 
         Label(self.top, text="Distância: ").grid(row=0, column=0)
@@ -29,8 +28,6 @@ class EdgeDistanceDlg:
         b = Button(self.top, text="OK", command=self._ok, width=10)
         b.grid(row=0, column=2, padx=5)
 
-        tools.center_window(self.top)
-
     def _ok(self):
         # validate user input
         try:
@@ -38,9 +35,9 @@ class EdgeDistanceDlg:
             if dist < 1:
                 raise ValueError
         except ValueError:
-            messagebox.showerror("Êpa!!", "Distância inválida")
+            messagebox.showerror("Êpa!!", "Distância inválida\nEntre um inteiro positivo > 0")
             return
-        self.parent.master.master.wm_attributes("-disabled", False)
+        Tools.Tools.master.wm_attributes("-disabled", False)
         self.top.destroy()
         self.callback(dist)
 

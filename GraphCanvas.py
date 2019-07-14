@@ -14,11 +14,13 @@
 
 from tkinter import *
 import Graph
-import EdgeDistanceDlg as edgedlg
+import EdgeDistanceDlg as EdgeDlg
+
 
 class GraphCanvas:
 
     node_radius = 15                        # static integer for graphic vertex circle radius
+    font = ("Arial", 10, "bold")            # static font for graph texts
 
     def __init__(self, frame):
 
@@ -46,9 +48,11 @@ class GraphCanvas:
             self.sel = None
             return
         # user clicked on 2nd node => selection complete => draw edge between them
-        self.sel = (self.sel, node)
         # prompt user to input distance
-        edgedlg.EdgeDistanceDlg(self.canvas, self._draw_edge)
+        EdgeDlg.EdgeDistanceDlg(self.canvas,
+                                "Aresta %d - %d" % (self.sel.node_id, node.node_id),
+                                self._draw_edge)
+        self.sel = (self.sel, node)
 
     def _draw_edge(self, dist):
         n1, n2 = self.sel                               # retrieve selected node pair
@@ -56,6 +60,8 @@ class GraphCanvas:
                                 n2.edge_border(n1),
                                 width=1)
         self.canvas.create_text(n2.middle_point(n1),
+                                font=GraphCanvas.font,
+                                fill="red",
                                 text=dist)
         self.sel = None                                 # unselect nodes
 
@@ -67,7 +73,7 @@ class GraphCanvas:
                                 x + GraphCanvas.node_radius,
                                 y + GraphCanvas.node_radius,
                                 fill="yellow")
-        self.canvas.create_text(x, y, text=node.node_id)
+        self.canvas.create_text(x, y, text=node.node_id, font=GraphCanvas.font, fill="blue")
 
     def _in_node(self, x, y):
         for node in self.graph:
@@ -103,7 +109,7 @@ class CanvasNode(Graph.Node):
     def middle_point(self, other):
         xp = (other.x + self.x)/2
         yp = (other.y + self.y)/2
-        return xp, yp
+        return xp+5, yp+5
 
     def get_distance(self, other):
         return ((other.x - self.x)**2 + (other.y - self.y)**2)**.5
