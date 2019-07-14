@@ -50,12 +50,14 @@ class GraphCanvas:
         # prompt user to input distance
         edgedlg.EdgeDistanceDlg(self.canvas, self._draw_edge)
 
-    def _draw_edge(self):
-        n1, n2 = self.sel      # retrieve selected node pair
+    def _draw_edge(self, dist):
+        n1, n2 = self.sel                               # retrieve selected node pair
         self.canvas.create_line(n1.edge_border(n2),
                                 n2.edge_border(n1),
                                 width=1)
-        self.sel = None        # unselect nodes
+        self.canvas.create_text(n2.middle_point(n1),
+                                text=dist)
+        self.sel = None                                 # unselect nodes
 
     def _create_node(self, x, y):
         node = CanvasNode(x, y)
@@ -88,7 +90,7 @@ class CanvasNode(Graph.Node):
         return ((self.x - x)**2 + (self.y - y)**2)**.5 <= 2*GraphCanvas.node_radius
 
     def edge_border(self, other):
-        d = ((other.x - self.x)**2 + (other.y - self.y)**2)**.5
+        d = self.get_distance(other)
         # watch out! possible division by zero here!!
         xp = self.x + GraphCanvas.node_radius*abs(other.x - self.x)/d
         yp = self.y + GraphCanvas.node_radius*abs(other.y - self.y)/d
@@ -98,6 +100,13 @@ class CanvasNode(Graph.Node):
             yp = self.y - (yp - self.y)
         return xp, yp
 
+    def middle_point(self, other):
+        xp = (other.x + self.x)/2
+        yp = (other.y + self.y)/2
+        return xp, yp
+
+    def get_distance(self, other):
+        return ((other.x - self.x)**2 + (other.y - self.y)**2)**.5
 
 
 

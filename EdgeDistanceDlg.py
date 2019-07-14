@@ -34,14 +34,15 @@ class EdgeDistanceDlg:
     def _ok(self):
         # validate user input
         try:
-            if int(self.e.get()) < 1:
+            dist = int(self.e.get())
+            if dist < 1:
                 raise ValueError
         except ValueError:
             messagebox.showerror("Êpa!!", "Distância inválida")
             return
         self.parent.master.master.wm_attributes("-disabled", False)
         self.top.destroy()
-        self.callback()
+        self.callback(dist)
 
 
 
