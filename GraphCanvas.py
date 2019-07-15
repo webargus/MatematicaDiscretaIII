@@ -28,6 +28,7 @@ class GraphCanvas:
         self.graph = Graph.Graph()          # Graph obj to accumulate nodes created
         self.sel = None                     # pointer to selected nodes for edging
         self.sel_tags = []                  # array to track selection tags
+        self.path_edges = []                # array to track Dijkstra path edges
         self.edit_flag = True               # flag to enable/disable graph editing
         self.arrow = PhotoImage(file='arrow16.png')  # img to highlight node selection
 
@@ -97,6 +98,21 @@ class GraphCanvas:
                                 text=dist)
         self.remove_tags()                             # unselect node pair
 
+    def draw_path_edge(self, node_id_1, node_id_2):
+        n1 = None
+        for node in self.graph:
+            if node.node_id == node_id_1:
+                n1 = node
+                break
+        for edge in n1.edges:
+            if edge.n2.node_id == node_id_2:
+                n2 = edge.n2
+                break
+        self.path_edges.append(self.canvas.create_line(n1.edge_border(n2),
+                                                       n2.edge_border(n1),
+                                                       fill="blue",
+                                                       width=4))
+
     def _create_node(self, x, y):
         node = CanvasNode(x, y)
         self.graph.append(node)
@@ -113,10 +129,16 @@ class GraphCanvas:
                                                       image=self.arrow))
 
     def remove_tags(self):
+        # unselect vertices
         self.sel = None
+        # delete canvas selection tags on top of vertices (arrows)
         for tag in self.sel_tags:
             self.canvas.delete(tag)
         del self.sel_tags[:]
+        # delete Dijkstra path lines and tags
+        for tag in self.path_edges:
+            self.canvas.delete(tag)
+        del self.path_edges[:]
         self.edit_flag = True
 
     def clear(self):

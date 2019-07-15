@@ -34,8 +34,8 @@ class GraphPanel:
 
         text = " Como usar:\n"
         text += " Criar vértice: clique na área em branco abaixo.\n"
-        text += " Cria aresta: clique nos vértices que quer conectar.\n"
-        text += " Dijkstra: clique no 1º vértice e no 2º com CTRL pressionada."
+        text += " Criar aresta: clique nos vértices que quer conectar.\n"
+        text += " Dijkstra: clique no 1º vértice e no 2º com a tecla CTRL pressionada."
         self.info_img = PhotoImage(file="info24.png")
         Label(form,
               relief=SUNKEN,
@@ -83,6 +83,11 @@ class GraphPanel:
         s, dist = graph.reverse_path(prev, sel[0], sel[1])
         if len(s) == 0:
             s = "Destino inacessível"
+        else:
+            # draw Dijkstra path here
+            node_ids = [int(x) for x in s.split('->')]
+            for i in range(len(node_ids) - 1):
+                self.canvas.draw_path_edge(node_ids[i], node_ids[i+1])
         self.path.config(text=("Menor caminho: %s" % s))
         self.result.config(text=("Total percorrido: %.2f" % dist))
 
