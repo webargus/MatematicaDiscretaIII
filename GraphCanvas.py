@@ -71,7 +71,8 @@ class GraphCanvas:
 
     def _edge(self):
         n1, n2 = self.sel
-        if n1.is_edge(n2):                      # abort if edge between nodes already exists
+        # abort if edge between nodes already exists
+        if n1.get_edge(n2) is not None:
             self.remove_tags()
             return
         # prompt user to input distance
@@ -80,6 +81,11 @@ class GraphCanvas:
                                 self._draw_edge)
 
     def _draw_edge(self, dist):
+
+        if dist is None:                                # user cancelled
+            self.remove_tags()                          # unselect node pair
+            return
+
         n1, n2 = self.sel                               # retrieve selected node pair
         n1.add_edge(n2, dist)                           # add edge between them
         self.canvas.create_line(n1.edge_border(n2),

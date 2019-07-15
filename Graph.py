@@ -4,8 +4,9 @@
     Dupla:
         Edson Kropniczki + Cristina Oliveira
     Descrição:
-        classes simples e básicas para a implementação do algoritmo de Dijkstra,
+        classes mínimas para a implementação do algoritmo de Dijkstra,
         para cálculo da menor distância entre dois vértices de um grafo simples não-direcional
+
     Algoritmo:
         fonte = https://en.wikipedia.org/wiki/Dijkstra's_algorithm
 
@@ -55,6 +56,12 @@ class Graph(list):
 
     def __init__(self):
         super(Graph, self).__init__()
+
+    ##################################################################
+    #
+    #   Wikipedia Dijkstra pseudo code implementation in Python
+    #
+    ##################################################################
 
     def dijkstra(self, source, target):
 
@@ -111,7 +118,10 @@ class Graph(list):
         s = s[:-2]
         return s, distance
 
+    #################################################################################
 
+
+#  Minimal Node/Edge classes supporting only undirected simple graphs
 class Node:
 
     def __init__(self, node_id):
@@ -122,34 +132,22 @@ class Node:
     def _has_edge(self, edge):
         return edge in self.edges
 
-    # append edge to node
+    # add edge to node
     def add_edge(self, other, dist):
         edge = self.Edge(self, other, dist)
         if not self._has_edge(edge):
             self.edges.append(edge)
             other.add_edge(self, dist)
 
-    def is_edge(self, other):
-        for edge in self.edges:
-            if edge.n2 == other:
-                return True
-        return False
-
+    # return Edge obj between this Node and @other, if any
     def get_edge(self, other):
         for edge in self.edges:
             if edge.n2 == other:
                 return edge
         return None
 
-    def __str__(self):
-        s = "vértice %d:\n\tarestas: " % self.node_id
-        if len(self.edges) > 0:
-            for edge in self.edges:
-                s += "\n\t%s" % edge
-        else:
-            s += "\n\t vértice desconectado"
-        return s + "\n"
-
+    # minimum overload to make Node objects hashable, so that we can use them as dictionary keys
+    # in Wikipedia Dijkstra algorithm
     def __hash__(self):
         return hash(self.node_id)
 
@@ -159,6 +157,7 @@ class Node:
     def __ne__(self, other):
         return not(self == other)
 
+    # Nested class Edge to construct tagged edge objects between Node instances
     class Edge:
 
         def __init__(self, n1, n2, dist):
@@ -172,8 +171,6 @@ class Node:
         def __lt__(self, other):
             return self.dist < other.dist
 
-        def __str__(self):
-            return "\tde %d a %d: %d" % (self.n1.node_id, self.n2.node_id, self.dist)
 
 
 
