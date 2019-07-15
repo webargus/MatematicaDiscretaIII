@@ -1,10 +1,13 @@
 
 """
     UFRPE - BSI2019.1 - Matemática Discreta - Trabalho 2 - 2ª VA
-    Dupla: Edson Kropniczki + Cristina Oliveira
-    Descrição: classes simples e básicas para a implementação do algoritmo de Dijkstra,
-    para cálculo da menor distância entre dois vértices de um grafo simples não-direcional
-    Algoritmo: fonte = https://en.wikipedia.org/wiki/Dijkstra's_algorithm
+    Dupla:
+        Edson Kropniczki + Cristina Oliveira
+    Descrição:
+        classes simples e básicas para a implementação do algoritmo de Dijkstra,
+        para cálculo da menor distância entre dois vértices de um grafo simples não-direcional
+    Algoritmo:
+        fonte = https://en.wikipedia.org/wiki/Dijkstra's_algorithm
 
     Pseudo-código para determinar a menor distância entre source e target:
 
@@ -59,9 +62,7 @@ class Graph(list):
         q = []
         dist = {}
         prev = {}
-        infinity = sys.maxsize
-
-        print("infinity=%d" % infinity)
+        infinity = sys.maxsize              # take Python largest integer for infinity
 
         for vertex in self:
             if vertex == source:
@@ -85,7 +86,6 @@ class Graph(list):
             del q[ix_u]
 
             if u == target:
-                print("breaking from Dijkstra")
                 break
 
             # for each neighbor v of u:
@@ -96,30 +96,20 @@ class Graph(list):
                     dist[v] = alt
                     prev[v] = u
 
-            '''for each neighbor v of u:           // only v that are still in Q
-                alt ← dist[u] + length(u, v)
-                if alt < dist[v]:
-                dist[v] ← alt
-                prev[v] ← u'''
-
         return dist, prev
 
     def reverse_path(self, prev, source, target):
         s = ""
+        distance = 0
         u = target
         if (prev[u] is not None) or (u == source):
             while u is not None:
                 s = str(u.node_id) + "->" + s
+                if prev[u] is not None:
+                    distance += u.get_edge(prev[u]).dist
                 u = prev[u]
-        print("s=%s" % s)
-    '''function reverse_path(prev, source, target):
-        S ← empty sequence
-        u ← target
-        if prev[u] is defined or u = source:      // Do something only if the vertex is reachable
-            while u is defined:                       // Construct the shortest path with a stack S
-                insert u at the beginning of S        // Push the vertex onto the stack
-                u ← prev[u]                           // Traverse from target to source
-    '''
+        s = s[:-2]
+        return s, distance
 
 
 class Node:
@@ -144,6 +134,12 @@ class Node:
             if edge.n2 == other:
                 return True
         return False
+
+    def get_edge(self, other):
+        for edge in self.edges:
+            if edge.n2 == other:
+                return edge
+        return None
 
     def __str__(self):
         s = "vértice %d:\n\tarestas: " % self.node_id

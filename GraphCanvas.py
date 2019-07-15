@@ -6,7 +6,7 @@
         Edson Kropniczki - (c) jul/2019 - all rights reserved
     License:
         just keep this header in your copy and feel free to mess up with this code as you wish;
-        project open source publicly available at https://github.com/webargus/MatematicaDiscretaIII;
+        source code also publicly available at https://github.com/webargus/MatematicaDiscretaIII;
         actually, accretions and improvements are more than welcome! :)
     Disclaimer:
         No liabilities or warrants whatsoever granted, as usual. Use it on your own risk!
@@ -27,7 +27,8 @@ class GraphCanvas:
         self.callback = callback            # parent callback to work Dijkstra thing on graph
         self.graph = Graph.Graph()          # Graph obj to accumulate nodes created
         self.sel = None                     # pointer to selected nodes for edging
-        self.sel_tags = []
+        self.sel_tags = []                  # array to track selection tags
+        self.edit_flag = True               # flag to enable/disable graph editing
         self.arrow = PhotoImage(file='arrow16.png')  # img to highlight node selection
 
         self.canvas = Canvas(frame, background="white")
@@ -37,12 +38,14 @@ class GraphCanvas:
         self.canvas.bind('<Control-1>', self._dijkstra)
 
     def _handle_click(self, event, ctrl=False):
+        if not self.edit_flag:
+            return
         # try to get node under mouse click
         node = self._in_node(event.x, event.y)
         # create fresh node if user clicked on blank canvas
         if node is None:
             self._create_node(event.x, event.y)
-            self._remove_tags()                     # unselect node if any selected
+            self.remove_tags()                     # unselect node if any selected
             return
         # select 1st node otherwise
         if self.sel is None:
@@ -51,12 +54,13 @@ class GraphCanvas:
             return
         elif self.sel == node:
             # clicked on same node, cancel selection
-            self._remove_tags()
+            self.remove_tags()
             return
         # user clicked on 2nd node => selection complete
         self.sel = (self.sel, node)
         self._draw_tag(node)
         if ctrl:
+            self.edit_flag = False
             self.callback(self.sel, self.graph)             # do Dijkstra stuff
         else:
             # edge drawing
@@ -68,7 +72,7 @@ class GraphCanvas:
     def _edge(self):
         n1, n2 = self.sel
         if n1.is_edge(n2):                      # abort if edge between nodes already exists
-            self._remove_tags()
+            self.remove_tags()
             return
         # prompt user to input distance
         EdgeDlg.EdgeDistanceDlg(self.canvas,
@@ -85,7 +89,7 @@ class GraphCanvas:
                                 font=GraphCanvas.font,
                                 fill="red",
                                 text=dist)
-        self._remove_tags()                             # unselect node pair
+        self.remove_tags()                             # unselect node pair
 
     def _create_node(self, x, y):
         node = CanvasNode(x, y)
@@ -102,11 +106,18 @@ class GraphCanvas:
                                                       node.y - GraphCanvas.node_radius,
                                                       image=self.arrow))
 
-    def _remove_tags(self):
+    def remove_tags(self):
         self.sel = None
         for tag in self.sel_tags:
             self.canvas.delete(tag)
         del self.sel_tags[:]
+        self.edit_flag = True
+
+    def clear(self):
+        self.canvas.delete("all")
+        del self.graph[:]
+        CanvasNode.node_id = 0
+        self.edit_flag = True
 
     def _in_node(self, x, y):
         for node in self.graph:

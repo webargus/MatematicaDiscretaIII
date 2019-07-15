@@ -32,12 +32,25 @@ class GraphPanel:
 
         form = Frame(wrap, {"pady": 8, "padx": 8})
         form.grid({"row": 1, "column": 0, "sticky": NSEW, "pady": 8, "padx": 8})
+        form.grid_columnconfigure(0, weight=1)
 
         # result report labels
-        self.path = Label(form)
-        self.path.grid(row=0, column=0)
-        self.result = Label(form)
-        self.result.grid(row=1, column=0)
+        self.path = Label(form, anchor=W)
+        self.path.grid(row=0, column=0, sticky=W)
+        self.result = Label(form, anchor=W)
+        self.result.grid(row=1, column=0, sticky=W)
+
+        # clear btns
+        self.reset = Button(form,
+                            width=14,
+                            command=self._reset_canvas,
+                            text="Resetar grafo")
+        self.reset.grid(row=0, column=1, sticky=E, pady=8)
+        self.clear = Button(form,
+                            width=14,
+                            command=self._clear_canvas,
+                            text="Excluir grafo")
+        self.clear.grid(row=1, column=1, stick=E)
 
         # infos btn
         self.info_img = PhotoImage(file="info24.png")
@@ -45,7 +58,8 @@ class GraphPanel:
                image=self.info_img,
                width=24,
                height=24,
-               command=self._infos).grid(row=2, column=0)
+               command=GraphPanel._infos,
+               anchor=W).grid(row=2, column=0, sticky=W, pady=8)
 
         canvasF = Frame(wrap, {"relief": SUNKEN, "border": 1})
         canvasF.grid({"pady": 8, "padx": 8, "row": 2, "column": 0, "sticky": NSEW})
@@ -54,28 +68,29 @@ class GraphPanel:
         self.canvas = GraphCanvas.GraphCanvas(canvasF, self._do_dijkstra)
 
     def _do_dijkstra(self, sel, graph):
-        for node in sel:
-            print(node)
-        for node in graph:
-            print(node)
         dist, prev = graph.dijkstra(sel[0], sel[1])
-        '''print("dist:\n")
-        for k, v in dist.items():
-            print(k, v, "\n")
-        print("prev:\n")
-        for k, v in prev.items():
-            print(k, v, "\n")'''
-        graph.reverse_path(prev, sel[0], sel[1])
+        s, dist = graph.reverse_path(prev, sel[0], sel[1])
+        if len(s) == 0:
+            s = "Destino inacessível"
+        self.path.config(text=("Menor caminho: %s" % s))
+        self.result.config(text=("Total percorrido: %.2f" % dist))
 
-
-    def _infos(self):
+    @staticmethod               # user guide msg
+    def _infos():
         text = "Clique no painel em branco: cria novo vértice\n"
         text += "Clique em dois vértices em sequência: cria aresta\n"
         text += "Ctrl + clique em dois vértices em sequência: cálculo Dijkstra"
         messagebox.showinfo("Infos", text)
 
+    def _reset_canvas(self):
+        self.path.config(text="")
+        self.result.config(text="")
+        self.canvas.remove_tags()
 
-
+    def _clear_canvas(self):
+        self.path.config(text="")
+        self.result.config(text="")
+        self.canvas.clear()
 
 
 

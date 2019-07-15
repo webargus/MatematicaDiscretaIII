@@ -18,8 +18,6 @@ class Tools:
         # call update_idletasks before retrieving any geometry,
         # to ensure that the values returned are accurate
         win.update_idletasks()
-        # width = win.winfo_width()
-        # height = win.winfo_height()
         x = (Tools._screen_width // 2) - (width // 2)
         y = (Tools._screen_height // 2) - (height // 2)
         win.geometry('{}x{}+{}+{}'.format(width, height, x, y))
