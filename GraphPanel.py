@@ -58,6 +58,15 @@ class GraphPanel:
             print(node)
         for node in graph:
             print(node)
+        dist, prev = graph.dijkstra(sel[0], sel[1])
+        '''print("dist:\n")
+        for k, v in dist.items():
+            print(k, v, "\n")
+        print("prev:\n")
+        for k, v in prev.items():
+            print(k, v, "\n")'''
+        graph.reverse_path(prev, sel[0], sel[1])
+
 
     def _infos(self):
         text = "Clique no painel em branco: cria novo vértice\n"

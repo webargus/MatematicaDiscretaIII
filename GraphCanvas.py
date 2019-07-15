@@ -27,7 +27,6 @@ class GraphCanvas:
         self.callback = callback            # parent callback to work Dijkstra thing on graph
         self.graph = Graph.Graph()          # Graph obj to accumulate nodes created
         self.sel = None                     # pointer to selected nodes for edging
-        self.dijkstra = None                # pointer to selected nodes for Dijkstra
         self.sel_tags = []
         self.arrow = PhotoImage(file='arrow16.png')  # img to highlight node selection
 
@@ -56,11 +55,10 @@ class GraphCanvas:
             return
         # user clicked on 2nd node => selection complete
         self.sel = (self.sel, node)
+        self._draw_tag(node)
         if ctrl:
-            self.callback(self.sel, self.graph)             # do Dijkstra
-            self._remove_tags()
+            self.callback(self.sel, self.graph)             # do Dijkstra stuff
         else:
-            self._draw_tag(node)
             # edge drawing
             self._edge()
 
