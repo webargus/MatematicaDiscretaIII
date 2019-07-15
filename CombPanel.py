@@ -64,13 +64,16 @@ class CombPanel:
         n = self.n.get()
         k = self.k.get()
         try:
-            n, k = [int(v, 2) for v in (n, k)]
+            n, k = [int(v) for v in (n, k)]
             if n < k:
                 raise ValueError
         except ValueError:
             messagebox.showerror("Êpa!!",
                                  "Entrada inválida!\nEntre somente inteiros positivos com n > k.")
             return
+
+        result = Comb.comb(n, k)
+        self.text.append_text("C(%d, %d) = %d\n" % (n, k, result))
 
 
 

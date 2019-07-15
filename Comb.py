@@ -5,4 +5,13 @@
 """
 
 
+def comb(n, k):
+    # caso base
+    if k == 0:
+        return 1
+    return ((n-k+1)*comb(n, k-1))//k
+
+
+
+
 
