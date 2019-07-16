@@ -1,3 +1,15 @@
+"""
+    Description:
+        Static reference to main window, including method to center window on screen
+    Author:
+        Edson Kropniczki - (c) jul/2019 - all rights reserved
+    License:
+        just keep this header in your copy and feel free to mess up with this code as you wish;
+        source code also publicly available at https://github.com/webargus/MatematicaDiscretaIII;
+        actually, accretions and improvements are more than welcome! :)
+    Disclaimer:
+        No liabilities fall back on author, as usual. Use it at your own risk!
+"""
 
 
 class Tools:

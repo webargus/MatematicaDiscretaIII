@@ -4,11 +4,12 @@
     Dupla:
         Edson Kropniczki + Cristina Oliveira
     Descrição:
-        classes mínimas para a implementação do algoritmo de Dijkstra,
+        classes para a implementação do algoritmo de Dijkstra,
         para cálculo da menor distância entre dois vértices de um grafo simples não-direcional
 
     Algoritmo:
-        fonte = https://en.wikipedia.org/wiki/Dijkstra's_algorithm
+        fonte: Wikipedia
+        URL  : https://en.wikipedia.org/wiki/Dijkstra's_algorithm
 
     Pseudo-código para determinar a menor distância entre source e target:
 
@@ -59,7 +60,8 @@ class Graph(list):
 
     ##################################################################
     #
-    #   Wikipedia Dijkstra pseudo code implementation in Python
+    #   Implementação em Python do algoritmo de Dijkstra
+    #   baseada no pseudo código do Wikipedia acima
     #
     ##################################################################
 
@@ -69,7 +71,7 @@ class Graph(list):
         q = []
         dist = {}
         prev = {}
-        infinity = sys.maxsize              # take Python largest integer for infinity
+        infinity = sys.maxsize        # tomamos o maior inteiro disponível em Python como infinito
 
         for vertex in self:
             if vertex == source:
@@ -121,7 +123,7 @@ class Graph(list):
     #################################################################################
 
 
-#  Minimal Node/Edge classes supporting only undirected simple graphs
+#  Classes Node/Edge para a construção de grafos na GUI e para uso no algoritmo de Dijkstra
 class Node:
 
     def __init__(self, node_id):
