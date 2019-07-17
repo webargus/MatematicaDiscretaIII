@@ -8,7 +8,7 @@
         source code also publicly available at https://github.com/webargus/MatematicaDiscretaIII;
         actually, accretions and improvements are more than welcome! :)
     Disclaimer:
-        No liabilities fall back on author, as usual. Use it at your own risk!
+        Use it at your own risk!
 """
 
 

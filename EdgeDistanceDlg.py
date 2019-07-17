@@ -8,7 +8,7 @@
         source code also publicly available at https://github.com/webargus/MatematicaDiscretaIII;
         actually, accretions and improvements are more than welcome! :)
     Disclaimer:
-        No liabilities or warrants whatsoever granted, as usual. Use it on your own risk!
+        Use it on your own risk!
 """
 
 from tkinter import *
