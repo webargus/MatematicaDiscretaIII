@@ -19,7 +19,7 @@ class Gui(Frame):
         Frame.__init__(self)
         Tools.Tools.root(self.master)
         Tools.Tools.center_window(self.master, 1120, 600)
-        self.master.iconbitmap("brasao32.ico")
+        # self.master.iconbitmap("brasao32.ico")
         self.master.resizable(0, 0)
         self.master.state('normal')
         self.master.title("Matemática Discreta - Trabalho 2 - SI2019.1")
