@@ -21,13 +21,14 @@ class EdgeDistanceDlg:
     def __init__(self, parent, title, callback):
 
         self.top = Toplevel(parent, pady=10, padx=10)
-        Tools.Tools.center_window(self.top, 200, 100)
+        Tools.Tools.center_window(self.top, 240, 100)
         self.top.resizable(0, 0)
         self.top.state("normal")
         self.top.title(title)
-        self.top.iconbitmap('brasao32.ico')
+        # self.top.iconbitmap('brasao32.ico')
         self.top.protocol("WM_DELETE_WINDOW", self._close)      # cancel input
-        Tools.Tools.master.wm_attributes("-disabled", True)     # disable top parent window
+        self.top.grab_set()
+        # Tools.Tools.master.wm_attributes("-disabled", True)     # disable top parent window
         self.top.after(500, lambda: self.top.focus_force())     # set focus after things settle
         self.top.transient(Tools.Tools.master)
         self.callback = callback                                # callback to return input to caller
@@ -44,7 +45,7 @@ class EdgeDistanceDlg:
         b.grid(row=1, column=1, padx=12, pady=12)
 
     def _close(self, dist=None):
-        Tools.Tools.master.wm_attributes("-disabled", False)        # important! enable main window!
+        # Tools.Tools.master.wm_attributes("-disabled", False)        # important! enable main window!
         self.top.destroy()
         self.callback(dist)             # return input to caller (None, if cancelled)
 

@@ -34,11 +34,12 @@ class GraphPanel:
         text = " Como usar:\n"
         text += " Criar vértice: clique na área em branco abaixo.\n"
         text += " Criar aresta: clique nos vértices que quer conectar.\n"
-        text += " Dijkstra: clique no vértice inicial e no final com a tecla CTRL pressionada."
+        text += " Dijkstra: clique no vértice inicial e no final \n\tcom a tecla CTRL pressionada."
         self.info_img = PhotoImage(file="info24.png")
         Label(form,
               relief=SUNKEN,
               text=text,
+              font=("Arial, sans-serif", 10),
               image=self.info_img,
               compound=LEFT,
               justify=LEFT,

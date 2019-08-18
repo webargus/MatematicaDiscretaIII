@@ -38,13 +38,17 @@ class CombPanel:
         Label(form, {"text": "n: ",
                      "font": ("Arial", 12)}).grid({"row": 0, "column": 0})
         self.n = StringVar()
-        Entry(form, {"textvariable": self.n}).grid({"row": 0, "column": 1})
+        Entry(form, {"textvariable": self.n,
+                     "font": ("Arial, sans-serif", 10),
+                     "width": 8}).grid({"row": 0, "column": 1})
 
         # label and entry to input k
         Label(form, {"text": "k: ",
                      "font": ("Arial", 12)}).grid({"row": 0, "column": 2})
         self.k = StringVar()
-        Entry(form, {"textvariable": self.k}).grid({"row": 0, "column": 3})
+        Entry(form, {"textvariable": self.k,
+                     "font": ("Arial, sans-serif", 10),
+                     "width": 8}).grid({"row": 0, "column": 3})
 
         # submit button
         params = {"text": "Ok",
